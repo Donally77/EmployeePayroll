@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.employeepayrollservice.FileUtils;
+import com.employeepayrollservice.Java8WatchService;
 
 public class EmployeePayrollServiceTest {
 
@@ -51,5 +53,12 @@ public class EmployeePayrollServiceTest {
         Files.newDirectoryStream(playPath, path -> path.toFile().isFile() && path.toString().contains("temp"))
                 .forEach(System.out::println);
     }
+
+    public void givenADirectoryWhenWatchedListsAllTheActivities() throws IOException {
+        Path dir = Paths.get(HOME + "/" + PLAY_WITH_NIO);
+        Files.list(dir).filter(Files::isRegularFile).forEach(System.out::println);
+        new Java8WatchService(dir).processEvents();
+    }
+
 
 }
