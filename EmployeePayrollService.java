@@ -60,6 +60,11 @@ public class EmployeePayrollService {
         return 0;
     }
 
+//uc5
+public void printData(IOService ioService) {
+    new EmployeePayrollFileIOOperations().printEmployeePayrollData();
+}
+
 
 }
 
