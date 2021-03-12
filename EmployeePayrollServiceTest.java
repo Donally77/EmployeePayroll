@@ -1,78 +1,24 @@
 package com.employeepayrollservice;
 
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.employeepayrollservice.FileUtils;
-import com.employeepayrollservice.Java8WatchService;
 
 public class EmployeePayrollServiceTest {
 
-    private static String HOME = "C:\\Users\\patel\\OneDrive\\Desktop\\Bridgelabz\\Employeepayrollservice";
-    private static String PLAY_WITH_NIO = "TempPlayGround";
-
     @Test
-    public void givenPathWhenCheckedThenConfirm() throws IOException {
-        // Check File exists
-        Path homePath = Paths.get(HOME);
-        assertTrue(Files.exists(homePath));
-        System.out.println(homePath);
+    public void given3EmployeeWhenWrittenToFile_ShouldReturnEmployeeEnteries() {
+        EmployeePayrollData[] arrayOfEmps = {
+                new EmployeePayrollData(1, "Donally", 100000),
+                new EmployeePayrollData(2, "pooja", 100000),
+                new EmployeePayrollData(3, "Swati", 100000),
+        };
+        EmployeePayrollService employeePayRollService;
+        employeePayRollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
 
-        // Delete file and check file does not exist
-        Path playPath = Paths.get(HOME + "/" + PLAY_WITH_NIO);
-        if (Files.exists(playPath))
-            FileUtils.deleteFiles(playPath.toFile());
-        assertTrue(Files.notExists(playPath));
+        employeePayRollService.writeData(EmployeePayrollService.IOService.FILE_IO);
 
-        // Create a directory
-        Files.createDirectory(playPath);
-        assertTrue(Files.exists(playPath));
 
-        // Create File
-        IntStream.range(1, 10).forEach(cntr -> {
-            Path tempFile = Paths.get(playPath + "/temp" + cntr);
-            assertTrue(Files.notExists(tempFile));
-            try {
-                Files.createFile(tempFile);
-            } catch (IOException e) {
-            }
-            assertTrue(Files.exists(tempFile));
-        });
-
-        // List files, directories as well as files with extensions
-        System.out.println("Files.list");
-        Files.list(playPath).filter(Files::isRegularFile).forEach(System.out::println);
-        System.out.println("Files.newDirectory");
-        Files.newDirectoryStream(playPath).forEach(System.out::println);
-        System.out.println("Files.newDirectory with temp");
-        Files.newDirectoryStream(playPath, path -> path.toFile().isFile() && path.toString().contains("temp"))
-                .forEach(System.out::println);
-    }
-
-    public void givenADirectoryWhenWatchedListsAllTheActivities() throws IOException {
-        Path dir = Paths.get(HOME + "/" + PLAY_WITH_NIO);
-        Files.list(dir).filter(Files::isRegularFile).forEach(System.out::println);
-        new Java8WatchService(dir).processEvents();
-    }
-
-    @Test
-    public void given3EmployeeEntries_ShouldMatchTheEmployeeEntries_WhenWrittenToTheFile() {
-        EmployeePayrollData[] empArray = { new EmployeePayrollData(200456, "Warren Buffet", 500000.0),
-                new EmployeePayrollData(200457, "Amanico Ortega", 200000.0),
-                new EmployeePayrollData(200551, "Larry Ellison", 800000.0) };
-        EmployeePayrollService employeePayrollService;
-        employeePayrollService = new EmployeePayrollService(Arrays.asList(empArray));
-        employeePayrollService.writeData(EmployeePayrollService.IOService.FILE_IO);
-        long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.FILE_IO);
-        assertEquals(3, entries);
     }
 
 
