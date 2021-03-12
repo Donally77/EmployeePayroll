@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.employeepayrollservice.FileUtils;
 import com.employeepayrollservice.Java8WatchService;
@@ -58,6 +61,18 @@ public class EmployeePayrollServiceTest {
         Path dir = Paths.get(HOME + "/" + PLAY_WITH_NIO);
         Files.list(dir).filter(Files::isRegularFile).forEach(System.out::println);
         new Java8WatchService(dir).processEvents();
+    }
+
+    @Test
+    public void given3EmployeeEntries_ShouldMatchTheEmployeeEntries_WhenWrittenToTheFile() {
+        EmployeePayrollData[] empArray = { new EmployeePayrollData(200456, "Warren Buffet", 500000.0),
+                new EmployeePayrollData(200457, "Amanico Ortega", 200000.0),
+                new EmployeePayrollData(200551, "Larry Ellison", 800000.0) };
+        EmployeePayrollService employeePayrollService;
+        employeePayrollService = new EmployeePayrollService(Arrays.asList(empArray));
+        employeePayrollService.writeData(EmployeePayrollService.IOService.FILE_IO);
+        long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.FILE_IO);
+        assertEquals(3, entries);
     }
 
 
