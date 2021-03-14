@@ -65,6 +65,16 @@ public void printData(IOService ioService) {
     new EmployeePayrollFileIOOperations().printEmployeePayrollData();
 }
 
+//UC6
+public List<EmployeePayrollData> readData(IOService ioService) {
+    if (ioService.equals(IOService.FILE_IO))
+        return new EmployeePayrollFileIOOperations().readEmployeePayrollData();
+    else
+        return null;
+}
+
+
+
 
 }
 
